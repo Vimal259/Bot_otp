@@ -24,7 +24,10 @@ dist-ssr
 *.sw?
 .env
 
-# Composer
+# Ignore vendor directory
 /vendor/
-composer.phar
-composer.lock
+
+# Exclude the following from version control
+/.env
+/node_modules
+/composer.lock
