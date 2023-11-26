@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
+import BASE_URL from "src/constants/helper.js"
 
 
 
@@ -36,7 +37,7 @@ const BuyNumber = () => {
       console.log('HYY') 
       console.log(selectedServer);
       try {
-        const response = await fetch(`http://localhost:8081/services${server.value}`);
+        const response = await fetch(`${BASE_URL}/services${server.value}`);
         const data = await response.json();
         setServices(data);
       } 
@@ -110,7 +111,7 @@ const BuyNumber = () => {
         code_sms: sms, 
       };
 
-      const res = await axios.post(`http://localhost:8081/add-history?access_token=${Cookies.get("serv_auth")}`, requestData)
+      const res = await axios.post(`${BASE_URL}/add-history?access_token=${Cookies.get("serv_auth")}`, requestData)
       if(res.status === 200){
         user.balance = res.data.balance;
         setUser(user)

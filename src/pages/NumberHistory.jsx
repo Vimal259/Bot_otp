@@ -6,6 +6,8 @@ import axios from "axios";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
 import Cookies from "js-cookie";
+import BASE_URL from "src/constants/helper.js"
+
 const NumberHistory = () => {
 
   const [feedbackMessage, setFeedbackMessage] = useState("There is no message yet");
@@ -17,7 +19,7 @@ const NumberHistory = () => {
       email: user.email,
       feedback: feedbackMessage
     }
-      const res = await axios.post(`http://localhost:8081/feedback?access_token=${Cookies.get("serv_auth")}`, values)
+      const res = await axios.post(`${BASE_URL}/feedback?access_token=${Cookies.get("serv_auth")}`, values)
 
       if(res.status === 200){
         console.log("Feedback sent Successfully")

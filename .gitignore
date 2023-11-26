@@ -31,3 +31,4 @@ dist-ssr
 /.env
 /node_modules
 /composer.lock
+./.env

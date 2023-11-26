@@ -8,6 +8,7 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
+import BASE_URL from "src/constants/helper.js"
 
 const Login = () => {
     const [values, setValues]= useState({
@@ -30,7 +31,7 @@ const Login = () => {
       
         if (!errors.email && !errors.password) {
           try {
-            const res = await axios.post('http://localhost:8081/login', values);
+            const res = await axios.post(`${BASE_URL}/login`, values);
       
             // Check if the response status is 200
             if (res.status === 200) {

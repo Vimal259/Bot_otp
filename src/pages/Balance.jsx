@@ -5,6 +5,7 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
+import BASE_URL from "src/constants/helper.js"
 
 function BalanceComponent() {
     const {user, setUser} = useContext(UserContext);
@@ -19,7 +20,7 @@ function BalanceComponent() {
         }
 
         const token = Cookies.get("serv_auth");
-        const temp = async() => {await axios.get(`http://localhost:8081/test?access_token=${token}`, values)
+        const temp = async() => {await axios.get(`${BASE_URL}/test?access_token=${token}`, values)
             .then(response => {
                 console.log(response);
             })
@@ -30,7 +31,7 @@ function BalanceComponent() {
 
         temp()
 
-        // axios.get(`http://localhost:8081/balance?id=${userId}`)
+        // axios.get(`${BASE_URL}/balance?id=${userId}`)
         //     .then(response => {
         //         setUser(prevUser => ({ ...prevUser, balance: response.data.balance }));
         //     })

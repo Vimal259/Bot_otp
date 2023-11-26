@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import Validation from './SignupValidation';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import BASE_URL from "src/constants/helper.js"
 useNavigate
 const SignUp = () => {
   const [values, setValues]=useState({
@@ -23,7 +24,7 @@ const navigate = useNavigate();
         event.preventDefault();
         setErrors(Validation(values));
         if (errors.name ==="" && errors.email ==="" && errors.password ===""){
-            axios.post('http://localhost:8081/signup', values)
+            axios.post(`${BASE_URL}/signup`, values)
             .then(res => navigate('/login'))
             .catch(err => console.log(err))
         }
