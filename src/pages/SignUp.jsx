@@ -7,6 +7,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config";
 
+
+
 useNavigate;
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -15,7 +17,7 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
-
+  
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const handleInput = (event) => {
