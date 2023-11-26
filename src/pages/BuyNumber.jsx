@@ -171,6 +171,7 @@ const BuyNumber = () => {
     setSelectedServer(0);
     setSelectedService(0);
     setMessage("Cancelled successfully");
+    window.location.reload();
   };
 
   const nextSMS = async (serverEndpoint, numberId) => {
