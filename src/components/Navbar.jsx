@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+const BASE_URL =process.env.BASE_URL;
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ useEffect(() => {
     const values = {
       email: Cookies.get("auth"),
     }
-      const res = await axios.post(`http://localhost:8081/balance?access_token=${Cookies.get("serv_auth")}`, values)
+      const res = await axios.post(`${BASE_URL}/balance?access_token=${Cookies.get("serv_auth")}`, values)
 
       if(res.status === 200){
         setUser({loggedIn: true, email: Cookies.get("auth"), balance: res.data.balance, name: res.data.name })

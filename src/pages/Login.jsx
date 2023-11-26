@@ -8,7 +8,7 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
-import BASE_URL from "src/constants/helper.js"
+
 
 const Login = () => {
     const [values, setValues]= useState({
@@ -19,6 +19,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
     const [errors, setErrors] =useState({})
+    const BASE_URL = process.env.BASE_URL;
     const handleInput = (event) =>{
         setValues(prev=> ({...prev, [event.target.name]: event.target.value}))
     }

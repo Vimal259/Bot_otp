@@ -5,11 +5,12 @@ import axios from 'axios';
 import Cookies from "js-cookie";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
-import BASE_URL from "src/constants/helper.js"
+
 
 function BalanceComponent() {
     const {user, setUser} = useContext(UserContext);
     console.log(user);
+    const BASE_URL = process.env.BASE_URL;
 
     useEffect(() => {
         console.log(user);

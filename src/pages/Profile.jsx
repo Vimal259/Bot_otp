@@ -5,13 +5,14 @@ import { useState } from "react";
 import { list } from "postcss";
 import Cookies from "js-cookie";
 import { useContext } from 'react';
-import BASE_URL from "src/constants/helper.js"
+
 import { UserContext } from "../components/UserContext"
 
 const Profile = () => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const BASE_URL = process.env.BASE_URL;
   
   const {user, setUser} = useContext(UserContext);
   const details=[

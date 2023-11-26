@@ -6,12 +6,13 @@ import axios from "axios";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
 import Cookies from "js-cookie";
-import BASE_URL from "src/constants/helper.js"
+
 
 const NumberHistory = () => {
 
   const [feedbackMessage, setFeedbackMessage] = useState("There is no message yet");
   const {user, setUser} = useContext(UserContext);
+  const BASE_URL = process.env.BASE_URL;
 
   const enterFeedback = async() => {
 

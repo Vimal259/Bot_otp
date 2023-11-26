@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import Validation from './SignupValidation';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import BASE_URL from "src/constants/helper.js"
+
 useNavigate
 const SignUp = () => {
   const [values, setValues]=useState({
@@ -15,6 +15,7 @@ const SignUp = () => {
     confirmPassword:''
 
 })
+const BASE_URL = process.env.BASE_URL;
 const navigate = useNavigate();
     const [errors, setErrors] =useState({})
     const handleInput = (event) =>{

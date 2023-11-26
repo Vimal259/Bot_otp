@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { useContext } from 'react';
 import { UserContext } from "../components/UserContext"
-import BASE_URL from "src/constants/helper.js"
+
 
 
 
@@ -21,6 +21,7 @@ const BuyNumber = () => {
   const {user, setUser} = useContext(UserContext);
   const [price,setPrice] =useState(null)
   const [sms, Setsms] = useState(undefined);
+  const BASE_URL = process.env.BASE_URL;
 
 
   const handleServerClick = async (server) => {
