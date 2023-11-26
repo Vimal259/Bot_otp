@@ -57,6 +57,7 @@ const verify_token = (token, email, callback) => {
 }
 
 app.post('/signup', (req,res)=>{
+    res.set('Access-Control-Allow-Origin', '*');
     let { name, email, password } = req.body;
     const sql= "INSERT INTO ci_users (`name`,`email`,`password`) VALUES (?, ?, ?) ";
     const salt = bcrypt.genSaltSync(10)
