@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
-// import { tableContents } from "../constants";
+import { tableContents } from "../constants";
 import Button from "../components/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../components/UserContext";
@@ -10,14 +10,6 @@ import { BASE_URL } from "../../config";
 
 
 const NumberHistory = () => {
-
-  const [tableContents, setTableContents] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from your MySQL database here
-    fetchDataFromDatabase();
-  }, []);
-  
   const [feedbackMessage, setFeedbackMessage] = useState(
     "There is no message yet"
   );
@@ -38,22 +30,6 @@ const NumberHistory = () => {
       console.log("Feedback sent Successfully");
     } else {
       console.log("Internal Server Error");
-    }
-  };
-  const fetchDataFromDatabase = async () => {
-    try {
-      // Make a fetch request to your API endpoint
-      const response = await fetch(`${BASE_URL}/get-history`);
-      const data = await response.json();
-
-      // Assuming your API returns an array of items
-      if (Array.isArray(data)) {
-        setTableContents(data);
-      } else {
-        console.error('Data received is not an array:', data);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
     }
   };
 
@@ -81,9 +57,9 @@ const NumberHistory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {tableContents.map((item, index) => (
-                    <tr key={item.ID}>
-                      <td>{index + 1}</td>
+                  {tableContents.map((item) => (
+                    <tr key={0}>
+                      <td>{9 + 1}</td>
                       <td>{item.ID}</td>
                       <td>{item.Date}</td>
                       <td>{item.Service}</td>
