@@ -6,11 +6,14 @@ import Button from "../components/Button";
 import { useContext } from "react";
 import { UserContext } from "../components/UserContext";
 import { BASE_URL } from "../../config";
+import axios from 'axios';
+import Cookies from "js-cookie";
+
 
 //Need to work on responsiveness
 const BuyNumber = () => {
   const [selectedServer, setSelectedServer] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState("+919265273954");
+  const [phoneNumber, setPhoneNumber] = useState("+91**********");
   const [message, setMessage] = useState("There is no message yet");
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState("");
@@ -23,15 +26,12 @@ const BuyNumber = () => {
 
   const handleServerClick = async (server) => {
     setSelectedServer(server.value);
-    console.log(server);
-    console.log(server.apiEndpoint);
+    
 
     try {
       // Find the selected server by value
       setServerEndpoint(server.apiEndpoint);
-      console.log(serverEndpoint);
-      console.log("HYY");
-      console.log(selectedServer);
+      
       try {
         const response = await fetch(`${BASE_URL}/services${server.value}`);
         const data = await response.json();
@@ -49,17 +49,17 @@ const BuyNumber = () => {
       setSelectedService(serviceCode);
       setPrice(Price);
 
-      console.log("Selected Service Code:", serviceCode);
+      
     } else {
       alert("Balance is LOW");
     }
   };
 
   const getNumber = async () => {
-    console.log(serverEndpoint);
+    
     var apiEndpoint = "";
     apiEndpoint = `${serverEndpoint}&action=getNumber&service=${selectedService}&country=22`;
-    console.log({ apiEndpoint });
+    
     try {
       // Make an API call to get the number
       const response = await fetch(apiEndpoint);
@@ -119,8 +119,8 @@ const BuyNumber = () => {
 
   const getStatus = async (serverEndpoint, numberId) => {
     const statusEndpoint = `${serverEndpoint}&action=getStatus&id=${numberId}`;
-    console.log("getting message");
-    console.log(numberId);
+    
+    
 
     try {
       // Make an API call to get the status
@@ -148,8 +148,10 @@ const BuyNumber = () => {
     }
   };
 
-  const cancelOptions = async (serverEndpoint, numberId) => {
+  const cancelOptions = async () => {
+    
     const cancelEndpoint = `${serverEndpoint}&action=setStatus&id=${numberId}&status=8`;
+    
 
     try {
       // Make an API call to set the status to 8 (or the appropriate status code)
@@ -165,7 +167,7 @@ const BuyNumber = () => {
     // Additional logic if needed after cancelling
     // For example, clearing state, redirecting, etc.
     setNumberId(null);
-    setPhoneNumber("+919265273954");
+    setPhoneNumber("+91**********");
     setSelectedServer(0);
     setSelectedService(0);
     setMessage("Cancelled successfully");

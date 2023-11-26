@@ -7,8 +7,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config";
 
-
-
 useNavigate;
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -17,22 +15,44 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
-  const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
+
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const handleInput = (event) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors(Validation(values));
+
     if (errors.name === "" && errors.email === "" && errors.password === "") {
-      axios
-        .post(`${BASE_URL}/signup`, values)
-        .then((res) => navigate("/login"))
-        .catch((err) => console.log(err));
+        try {
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'mode': 'cors',
+                },
+                body: JSON.stringify(values),
+            };
+
+            const response = await fetch(`${BASE_URL}/signup`, requestOptions);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data); // Adjust based on your server response structure
+
+            // If you need to navigate, you can do it here
+            navigate("/login");
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
-  };
+};
+
   // const handleSignUp = () => {
   //     // Add your login logic here
   //     console.log("Logging in with:", username, password);
