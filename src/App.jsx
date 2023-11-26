@@ -4,6 +4,7 @@ import { Login, SignUp, BuyNumber, AddBalance, NumberHistory, Profile } from "./
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+
 const App = () => {
   return (
     <main className="relative min-h-screen bg-background">
