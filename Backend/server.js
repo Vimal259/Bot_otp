@@ -184,6 +184,7 @@ app.post('/admin/add-balance', async (req, res) => {
       // Check if any rows were affected (user account found and updated)
       if (results.affectedRows > 0) {
         return res.json({ success: true, message: 'Balance added successfully' });
+        
       } else {
         return res.status(404).json({ error: 'User not found' });
       }

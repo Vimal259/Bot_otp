@@ -63,7 +63,7 @@ const BuyNumber = () => {
     try {
       // Make an API call to get the number
       const response = await fetch(apiEndpoint);
-      response.headers()
+      
       
       const data = await response.text(); // Assume the response is text
       var extractedNumberId = "";
