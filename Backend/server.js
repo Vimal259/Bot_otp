@@ -10,7 +10,14 @@ const bcrypt = require('bcryptjs')
 dotenv.config({path: './.env'});
 
 const app=express();
-app.use(cors());
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+  });
 app.use(express.json());
 // app.use(
 //     session({
@@ -57,7 +64,7 @@ const verify_token = (token, email, callback) => {
 }
 
 app.post('/signup', (req,res)=>{
-    res.set('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', '*');
     let { name, email, password } = req.body;
     const sql= "INSERT INTO ci_users (`name`,`email`,`password`) VALUES (?, ?, ?) ";
     const salt = bcrypt.genSaltSync(10)
@@ -101,7 +108,7 @@ app.post('/login', (req,res)=>{
                 process.env.JWT
             );
             
-            return res.status(200).json({token, "balance": result.balance, "name": result.Name})
+            return res.status(200).json({token, "balance": result.balance, "name": result.Name, is_admin: result.is_admin})
           } 
           else {  
             return res.status(401).json("Unauthorized");
@@ -157,9 +164,31 @@ app.post("/change-pass", (req, res)=> {
         else{
             return res.status(401).json("Unauthorized");
         }
-    })
+    }) 
 
 })
+
+
+app.post('/admin/add-balance', async (req, res) => {
+    const { userEmail, amount } = req.body;
+  
+    // Update the user's balance in the database
+    const updateQuery = 'UPDATE ci_users SET balance = balance + ? WHERE email = ?';
+  
+    db.query(updateQuery, [amount, userEmail], (error, results) => {
+      if (error) {
+        console.error('Error updating balance:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+  
+      // Check if any rows were affected (user account found and updated)
+      if (results.affectedRows > 0) {
+        return res.json({ success: true, message: 'Balance added successfully' });
+      } else {
+        return res.status(404).json({ error: 'User not found' });
+      }
+    });
+  });
 
 app.post("/add-history", (req, res) => {
     const {email, service, price, number, status, code_sms} = req.body;
