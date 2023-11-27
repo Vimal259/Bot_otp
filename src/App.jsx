@@ -1,6 +1,6 @@
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
-import { Login, SignUp, BuyNumber, AddBalance, NumberHistory, Profile } from "./pages";
+import { Login, SignUp, BuyNumber, AddBalance, NumberHistory, Profile, AdminPanel} from "./pages";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -21,7 +21,8 @@ const App = () => {
           <Route path='/add-balance' element={<AddBalance />} />
 					<Route path='/number-history' element={<NumberHistory />} />
 					<Route path='/profile' element={<Profile />} />
-          {/* <Route path='/balance' element={<BalanceComponent />} /> */}
+          <Route path='/adminpanel' element={<AdminPanel />} />
+          
 				</Routes>
       </section>
       <section className="absolute z-10 w-full pb-8 bg-blue-600 padding-x padding-t">

@@ -36,30 +36,54 @@ const Login = () => {
 
         // Check if the response status is 200
         if (res.status === 200) {
-          const token = res.data.token;
-          Cookies.set("serv_auth", token);
-          Cookies.set("auth", values.email);
-          setUser({
-            loggedIn: true,
-            email: values.email,
-            balance: res.data.balance,
-            name: res.data.name,
-          });
-
-          navigate("/profile");
-        } else {
-          alert("Unexpected response status: " + res.status);
+          const userData = res.data;
+          if (userData.is_admin === 1) {
+            const token = userData.token;
+            Cookies.set("serv_auth", token);
+            Cookies.set("auth", values.email);
+            
+            setUser({
+              loggedIn: true,
+              email: values.email,
+              balance: userData.balance,
+              name: userData.name,
+              isAdmin: true,
+            });
+    
+            // Redirect to admin panel after successful login
+            navigate("/adminpanel");
+          } else {
+            // For non-admin users, redirect to client profile page
+            const token = userData.token;
+            Cookies.set("serv_auth", token);
+            Cookies.set("auth", values.email);
+            
+            setUser({
+              loggedIn: true,
+              email: values.email,
+              balance: userData.balance,
+              name: userData.name,
+              isAdmin: false,
+            });
+    
+            // Redirect to client profile page
+            navigate("/profile");
+          }
         }
-      } catch (err) {
-        // Handle other errors
-        if (err.response && err.response.status === 401) {
-          alert("Invalid email or password");
-        } else {
-          console.error("Unexpected error:", err);
+            else {
+              alert("Unexpected response status: " + res.status);
+            }
+          } catch (err) {
+            // Handle other errors
+            if (err.response && err.response.status === 401) {
+              alert("Invalid email or password");
+            } else {
+              console.error("Unexpected error:", err);
+            }
         }
       }
     }
-  };
+  
 
   const sendPwd = () => {
     setForgetPassword(false);
@@ -156,6 +180,6 @@ const Login = () => {
       </div>
     </section>
   );
-};
+        };
 
 export default Login;
