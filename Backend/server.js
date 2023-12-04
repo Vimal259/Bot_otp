@@ -86,34 +86,48 @@ app.post('/login', (req,res)=>{
     const sql = "SELECT * FROM ci_users WHERE email = ?";
     const values = [email, password];
 
-    db.query(sql, values, async(err, result) => {
-        if (err){
-            return res.status(500).json("Error");
-        }
-        if (result.length > 0) {
-            result = result[0];
-            user_pass = result.password;
-        
-            const isPasswordCorrect = await bcrypt.compare(
-              password,
-              user_pass
-            );
-        
-            if (!isPasswordCorrect) {
-              return res.status(401).json("Unauthorized");
+    // admin details
+    const Admin_Email = "Qwerty@gmail.com"
+    const Admin_Pass = "qwert@12"
+
+    if(email === Admin_Email && password === Admin_Pass){
+        const token = jwt.sign(
+            {email: email, is_Admin: true},
+            process.env.JWT
+        );
+        return res.status(200).json({token, "balance": 0, "name": "Admin", is_admin: true})
+    }
+    else{
+        db.query(sql, values, async(err, result) => {
+            if (err){
+                return res.status(500).json("Error");
             }
-        
-            const token = jwt.sign(
-                {email: email},
-                process.env.JWT
-            );
+            if (result.length > 0) {
+                result = result[0];
+                user_pass = result.password;
             
-            return res.status(200).json({token, "balance": result.balance, "name": result.Name, is_admin: result.is_admin})
-          } 
-          else {  
-            return res.status(401).json("Unauthorized");
-          }
-    });
+                const isPasswordCorrect = await bcrypt.compare(
+                  password,
+                  user_pass
+                );
+            
+                if (!isPasswordCorrect) {
+                  return res.status(401).json("Unauthorized");
+                }
+            
+                const token = jwt.sign(
+                    {email: email},
+                    process.env.JWT
+                );
+                
+                return res.status(200).json({token, "balance": result.balance, "name": result.Name, is_admin: false})
+              } 
+              else {  
+                return res.status(401).json("Unauthorized");
+              }
+        });
+    }
+    
 })
 
 app.post('/balance', (req, res) => {
@@ -165,30 +179,49 @@ app.post("/change-pass", (req, res)=> {
             return res.status(401).json("Unauthorized");
         }
     }) 
-
 })
 
 
 app.post('/admin/add-balance', async (req, res) => {
     const { userEmail, amount } = req.body;
-  
-    // Update the user's balance in the database
-    const updateQuery = 'UPDATE ci_users SET balance = balance + ? WHERE email = ?';
-  
-    db.query(updateQuery, [amount, userEmail], (error, results) => {
-      if (error) {
-        console.error('Error updating balance:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-      }
-  
-      // Check if any rows were affected (user account found and updated)
-      if (results.affectedRows > 0) {
-        return res.json({ success: true, message: 'Balance added successfully' });
-        
-      } else {
+    const token = req.query.access_token;
+
+    if(token === undefined){
         return res.status(404).json({ error: 'User not found' });
-      }
-    });
+    }
+    else{
+        jwt.verify(token, process.env.JWT, (err, user) => {
+            if (err){
+                return res.status(404).json({ error: 'User not found' });
+            }    
+            else{
+                if (user.email === "Qwerty@gmail.com" && user.is_Admin === true){
+                    // Update the user's balance in the database
+                    const updateQuery = 'UPDATE ci_users SET balance = balance + ? WHERE email = ?';
+
+                    db.query(updateQuery, [amount, userEmail], (error, results) => {
+                      if (error) {
+                        console.error('Error updating balance:', error);
+                        return res.status(500).json({ error: 'Internal Server Error' });
+                      }
+                
+                      // Check if any rows were affected (user account found and updated)
+                      if (results.affectedRows > 0) {
+                        return res.json({ success: true, message: 'Balance added successfully' });
+                        
+                      } else {
+                        return res.status(404).json({ error: 'User not found' });
+                      }
+                    });
+                    // return res.status(200).json({ success: true, message: 'Balance added successfully' });
+                }   
+                else{
+                    return res.status(404).json({ error: 'User not found' });
+                } 
+            }    
+               
+        });
+    }
   });
 
 app.post("/add-history", (req, res) => {
@@ -346,19 +379,19 @@ app.get('/', (req, res) => {
 //     })
 // })
 
-app.get('/get_user', (req, res) => {
-    const {email} = req.body;
-    const sql = "SELECT * from ci_users WHERE email = ?";
-    db.query(sql, [email], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Internal Server Error' });
-        }
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        return res.status(200).json(result);
-    });
-})
+// app.get('/get_user', (req, res) => {
+//     const {email} = req.body;
+//     const sql = "SELECT * from ci_users WHERE email = ?";
+//     db.query(sql, [email], (err, result) => {
+//         if (err) {
+//             return res.status(500).json({ error: 'Internal Server Error' });
+//         }
+//         if (result.length === 0) {
+//             return res.status(404).json({ error: 'User not found' });
+//         }
+//         return res.status(200).json(result);
+//     });
+// })
 
 app.listen(PORT, ()=>{
     console.log(`listening on port ${PORT}`)

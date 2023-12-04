@@ -37,7 +37,7 @@ const Login = () => {
         // Check if the response status is 200
         if (res.status === 200) {
           const userData = res.data;
-          if (userData.is_admin === 1) {
+          if (userData.is_admin === true) {
             const token = userData.token;
             Cookies.set("serv_auth", token);
             Cookies.set("auth", values.email);

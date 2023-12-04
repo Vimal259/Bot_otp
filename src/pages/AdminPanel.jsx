@@ -3,24 +3,28 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
 import Button from '../components/Button';
-
+import Cookies from "js-cookie";
 
 
 const AdminPanel = () => {
   const [userEmail, setUserEmail] = useState('');
   const [amount, setAmount] = useState('');
 
-  const handleAddBalance = async () => {
+  const handleAddBalance = async (event) => {
     try {
-      const response = await axios.post(`${BASE_URL}/admin/add-balance`, {
+      const response = await axios.post(`${BASE_URL}/admin/add-balance?access_token=${Cookies.get("serv_auth")}`, {
         userEmail,
         amount,
       });
+      // event.preventDefault();
 
-      console.log(response.data); // Handle the response as needed
+      console.log(response.data);
+      // event.preventDefault(); 
     } catch (error) {
       console.error('Error adding balance:', error);
     }
+
+    // event.preventDefault();
   };
 
   return (
@@ -32,7 +36,7 @@ const AdminPanel = () => {
         <br />
         <form
           className="flex flex-col justify-center gap-6"
-          onSubmit={handleAddBalance}
+          // onSubmit={() => {handleAddBalance()}}
         >
           <div>
             <label htmlFor="userEmail">User Email:</label>
@@ -54,7 +58,7 @@ const AdminPanel = () => {
               onChange={(e) => setAmount(e.target.value)}
             />
           </div>
-          <Button type="submit" className="btn-success" label="Add Balance" />
+          <Button className="btn-success" label="Add Balance" type="submit" onclick="handleAddBalance(event)"/>
         </form>
         
       </div>
