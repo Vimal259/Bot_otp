@@ -62,10 +62,26 @@ const BuyNumber = () => {
     
     try {
       // Make an API call to get the number
-      const response = await fetch(apiEndpoint);
+      
+        const config = {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+      
+          },
+          method: "GET",
+          url: `${apiEndpoint}`,
+          withCredentials: true,
+        };
+        const data =  axios(config)
+          .then((response)=>console.log(response))
+          .catch(serviceHelper.onGlobalError);
+      ;
+
+      // const response = await fetch(apiEndpoint);
       
       
-      const data = await response.text(); // Assume the response is text
+      // const data = await response.text(); // Assume the response is text
       var extractedNumberId = "";
       var extractedPhoneNumber = "";
 

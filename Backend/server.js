@@ -19,13 +19,7 @@ app.use((req, res, next) => {
     next();
   });
 app.use(express.json());
-// app.use(
-//     session({
-//       secret: "myRandomSecretKey123", // Add a secret key for session data
-//       resave: false,
-//       saveUninitialized: true,
-//     })
-//   );
+
 
 const db = mysql.createPool({
     connectionLimit: 500, // Adjust as needed
@@ -35,13 +29,7 @@ const db = mysql.createPool({
     database: process.env.DATABASE,
   });
 
-// db.connect((error) => {
-//     if (error) {
-//         console.log(error)
-//     } else{
-//         console.log("MYSQL connected")
-//     }
-// })
+
 
 const PORT = 8081;
 
@@ -207,7 +195,7 @@ app.post('/admin/add-balance', async (req, res) => {
                 
                       // Check if any rows were affected (user account found and updated)
                       if (results.affectedRows > 0) {
-                        return res.json({ success: true, message: 'Balance added successfully' });
+                        return res.status(200).json({ success: true, message: 'Balance added successfully' });
                         
                       } else {
                         return res.status(404).json({ error: 'User not found' });

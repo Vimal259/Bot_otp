@@ -1,14 +1,25 @@
 // Import necessary libraries
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
 import Button from '../components/Button';
 import Cookies from "js-cookie";
+import { useContext } from "react";
+import { UserContext } from "../components/UserContext";
+import { useNavigate } from 'react-router-dom';
 
 
 const AdminPanel = () => {
   const [userEmail, setUserEmail] = useState('');
   const [amount, setAmount] = useState('');
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(user.email != 'Qwerty@gmail.com' && user.email != ''){
+      navigate('/profile');
+    }
+  }, [user])
 
   const handleAddBalance = async (event) => {
     try {
@@ -16,7 +27,7 @@ const AdminPanel = () => {
         userEmail,
         amount,
       });
-      // event.preventDefault();
+      event.preventDefault();
 
       console.log(response.data);
       // event.preventDefault(); 
@@ -58,7 +69,7 @@ const AdminPanel = () => {
               onChange={(e) => setAmount(e.target.value)}
             />
           </div>
-          <Button className="btn-success" label="Add Balance" type="submit" onclick="handleAddBalance(event)"/>
+          <button className="btn-success button" onClick={() => {handleAddBalance()}}> Add Balance</button>
         </form>
         
       </div>

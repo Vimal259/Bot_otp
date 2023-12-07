@@ -13,7 +13,6 @@ import { BASE_URL } from "../../config";
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
-  console.log(user);
 
   const logout = () => {
     Cookies.remove("serv_auth");
