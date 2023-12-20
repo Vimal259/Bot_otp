@@ -6,9 +6,8 @@ import Button from "../components/Button";
 import { useContext } from "react";
 import { UserContext } from "../components/UserContext";
 import { BASE_URL } from "../../config";
-import axios from 'axios';
+import axios from "axios";
 import Cookies from "js-cookie";
-
 
 //Need to work on responsiveness
 const BuyNumber = () => {
@@ -22,16 +21,14 @@ const BuyNumber = () => {
   const { user, setUser } = useContext(UserContext);
   const [price, setPrice] = useState(null);
   const [sms, Setsms] = useState(undefined);
-  
 
   const handleServerClick = async (server) => {
     setSelectedServer(server.value);
-    
 
     try {
       // Find the selected server by value
       setServerEndpoint(server.apiEndpoint);
-      
+
       try {
         const response = await fetch(`${BASE_URL}/services${server.value}`);
         const data = await response.json();
@@ -48,40 +45,30 @@ const BuyNumber = () => {
     if (parseFloat(user.balance) > parseFloat(Price)) {
       setSelectedService(serviceCode);
       setPrice(Price);
-
-      
     } else {
       alert("Balance is LOW");
     }
   };
 
   const getNumber = async () => {
-    
-    var apiEndpoint = "";
-    apiEndpoint = `${serverEndpoint}&action=getNumber&service=${selectedService}&country=22`;
-    
+    // var apiEndpoint = "";
+    // apiEndpoint = `${serverEndpoint}&action=getNumber&service=${selectedService}&country=22`;
+
     try {
       // Make an API call to get the number
-      
-        const config = {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-      
-          },
-          method: "GET",
-          url: `${apiEndpoint}`,
-          withCredentials: true,
-        };
-        const data =  axios(config)
-          .then((response)=>console.log(response))
-          .catch(serviceHelper.onGlobalError);
-      ;
 
-      // const response = await fetch(apiEndpoint);
-      
-      
-      // const data = await response.text(); // Assume the response is text
+      const res = await axios.post(`${BASE_URL}/get-number`, {
+        serverEndpoint,
+        selectedService,
+      });
+      console.log("response", res);
+
+      // const data = axios(config)
+      //   .then((response) => console.log(response))
+      //   .catch(serviceHelper.onGlobalError);
+      // // const response = await fetch(apiEndpoint);
+
+      const data = res.data.data; // Assume the response is text
       var extractedNumberId = "";
       var extractedPhoneNumber = "";
 
@@ -136,14 +123,17 @@ const BuyNumber = () => {
   }, [numberId, sms]);
 
   const getStatus = async (serverEndpoint, numberId) => {
-    const statusEndpoint = `${serverEndpoint}&action=getStatus&id=${numberId}`;
-    
-    
+    // const statusEndpoint = `${serverEndpoint}&action=getStatus&id=${numberId}`;
 
     try {
       // Make an API call to get the status
-      const response = await fetch(statusEndpoint);
-      var data = await response.text(); // Assume the response is text
+      const res = await axios.post(`${BASE_URL}/get-status`, {
+        serverEndpoint,
+        numberId,
+      });
+      // console.log("response", res);
+      
+      var data = res.data.data; // Assume the response is text
 
       // Update the state with the obtained status
       if (data != "STATUS_WAIT_CODE" && data != "STATUS_CANCEL") {
@@ -167,9 +157,7 @@ const BuyNumber = () => {
   };
 
   const cancelOptions = async () => {
-    
     const cancelEndpoint = `${serverEndpoint}&action=setStatus&id=${numberId}&status=8`;
-    
 
     try {
       // Make an API call to set the status to 8 (or the appropriate status code)
@@ -193,12 +181,15 @@ const BuyNumber = () => {
   };
 
   const nextSMS = async (serverEndpoint, numberId) => {
-    const nextSmsEndpoint = `${serverEndpoint}&action=setStatus&id=${numberId}&status=3`;
+    // const nextSmsEndpoint = `${serverEndpoint}&action=setStatus&id=${numberId}&status=3`;
 
     try {
       // Make an API call to set the status to 3 (or the appropriate status code)
-      const response = await fetch(nextSmsEndpoint);
-      const data = await response.text(); // Assume the response is text
+      const res = await axios.post(`${BASE_URL}/get-nextsms`, {
+        serverEndpoint,
+        numberId,
+      });
+      // const data = await response.text(); // Assume the response is text
       getStatus(serverEndpoint, numberId);
 
       // Placeholder for any logic based on the next SMS response

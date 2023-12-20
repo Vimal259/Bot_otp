@@ -4,12 +4,18 @@ const mysql = require('mysql');
 const cors= require('cors');
 const dotenv= require('dotenv');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
-
+const bcrypt = require('bcryptjs');
+const { default: axios } = require("axios");
 
 dotenv.config({path: './.env'});
 
 const app=express();
+app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    })
+  );
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.header(
@@ -20,7 +26,6 @@ app.use((req, res, next) => {
   });
 app.use(express.json());
 
-
 const db = mysql.createPool({
     connectionLimit: 500, // Adjust as needed
     host: process.env.DATABASE_HOST,
@@ -28,8 +33,6 @@ const db = mysql.createPool({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE,
   });
-
-
 
 const PORT = 8081;
 
@@ -117,6 +120,103 @@ app.post('/login', (req,res)=>{
     }
     
 })
+
+app.post("/get-number", (req, res) => {
+    const { serverEndpoint, selectedService } = req.body;
+    console.log("serverEndpoint", serverEndpoint, selectedService);
+    // var apiEndpoint = "";
+    const apiEndpoint =  `${serverEndpoint}&action=getNumber&service=${selectedService}&country=22`;
+  
+    // Make an API call to get the number
+    console.log("endPoint", apiEndpoint);
+    const config = {
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "text/json",
+      }, 
+      method: "GET",
+      url: `${apiEndpoint}`,
+      // withCredentials: true,
+    };
+  
+    return axios(config)
+      .then((response) => res.status(200).json({ data: response.data }))
+      .catch((err) => console.log("err", err));
+    // db.query(sql, [email], (err, result) => {
+    //   if (err) {
+    //     return res.status(500).json({ error: "Internal Server Error" });
+    //   }
+    //   if (result.length === 0) {
+    //     return res.status(404).json({ error: "User not found" });
+    //   }
+    //   const balance = result[0].balance;
+    //   return res.status(200).json({ balance, name: result[0].Name });
+    // });
+  });
+
+  app.post("/get-status", (req, res) => {
+    const { serverEndpoint, numberId } = req.body;
+    const statusEndpoint = `${serverEndpoint}&action=getStatus&id=${numberId}`;
+    
+  
+    // Make an API call to get the number
+    console.log("StatusendPoint", statusEndpoint);
+    const config = {
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "text/json",
+      }, 
+      method: "GET",
+      url: `${statusEndpoint}`,
+      // withCredentials: true,
+    };
+  
+    return axios(config)
+      .then((response) => res.status(200).json({ data: response.data }))
+      .catch((err) => console.log("err", err));
+    // db.query(sql, [email], (err, result) => {
+    //   if (err) {
+    //     return res.status(500).json({ error: "Internal Server Error" });
+    //   }
+    //   if (result.length === 0) {
+    //     return res.status(404).json({ error: "User not found" });
+    //   }
+    //   const balance = result[0].balance;
+    //   return res.status(200).json({ balance, name: result[0].Name });
+    // });
+  });
+
+  app.post("/get-nextsms", (req, res) => {
+    const { serverEndpoint, numberId } = req.body;
+    const nextSmsEndpoint = `${serverEndpoint}&action=setStatus&id=${numberId}&status=3`;
+    
+  
+    // Make an API call to get the number
+    console.log("StatusendPoint", nextSmsEndpoint);
+    const config = {
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "text/json",
+      }, 
+      method: "GET",
+      url: `${nextSmsEndpoint}`,
+      // withCredentials: true,
+    };
+  
+    return axios(config)
+      .then((response) => res.status(200).json({ data: response.data }))
+      .catch((err) => console.log("err", err));
+    // db.query(sql, [email], (err, result) => {
+    //   if (err) {
+    //     return res.status(500).json({ error: "Internal Server Error" });
+    //   }
+    //   if (result.length === 0) {
+    //     return res.status(404).json({ error: "User not found" });
+    //   }
+    //   const balance = result[0].balance;
+    //   return res.status(200).json({ balance, name: result[0].Name });
+    // });
+  });
 
 app.post('/balance', (req, res) => {
     const {email} = req.body; 
