@@ -31,10 +31,10 @@ const SignUp = () => {
         try {
             const requestOptions = {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'mode': 'cors',
-                },
+                // headers: {
+                //     'Content-Type': 'application/json',
+                //     'mode': 'cors',
+                // },
                 body: JSON.stringify(values),
             };
 
